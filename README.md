@@ -92,6 +92,13 @@ With trip_id, we can reuse it later for update trip status
     accept // true/false
 }
 ```
+This also publish a message to customer via socket
+```
+{
+    trip_id
+    status: "ARRIVING"
+}
+```
 * **Response:** `200 OK`
 
 ### Driver: Update trip status
@@ -175,11 +182,14 @@ This trip matching can be summary in this sequence events:
 7. Update trip when pickup/dropoff using `POST /v1/driver/update`. After finish the trip, driver status change to `available` to receive another trip
 
 
-# Bottom necks & Mitigation
+# Bottle necks & Mitigation
 
 ### High latency and scalability
-The interesting feature in rade hailing is its locality feature as only users in the same location can interact with each other. For example, in Hanoi, customer can only find a driver in Hanoi and travel in Hanoi. So to reduce latancy and increase scalability, we can deploy the cluster in multiple location and allow user connects to the nearest server.
+The interesting feature in ride hailing is its locality feature as only users in the same location can interact with each other. For example, in Hanoi, customer can only find a driver in Hanoi and mostly travel to location in Hanoi (Edge case: customer may travel outside city and move to another location belong to another cluster. In this case, we can handle by replicate profile data in multi cluster). So to reduce latancy and increase scalability, we can deploy the cluster in multiple location and allow user connects to the nearest server.
 For example, we can deploy a cluster in Hanoi to handle ride request for specific user in Hanoi, another one in Seoul to handle ride matching in Seoul.
 
-### Tracking real time
-Due to latancy, the driver position may not be accurate as push data. Customer device can use information such as last position, vehicle direction and speed to simulate current location
+### Tracking driver in real time
+Due to latancy, the driver position may not be accurate as push data. Customer device can use information such as last position, vehicle direction and speed to simulate current driver location
+
+### Overhead TCP connection
+With socket implementation, load balancer may be overload. To address this issue: use an additional network load balancer. 
