@@ -66,7 +66,7 @@ Estimate:
 }
 ```
 With trip_id, we can reuse it later for update trip status
-### Customer: Request trip
+### Customer: Request a trip
 `POST /v1/trip/request`
 * **Request:** 
 ```
