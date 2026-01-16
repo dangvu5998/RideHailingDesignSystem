@@ -101,9 +101,6 @@ This also publish a message to customer via socket
 ```
 * **Response:** `200 OK`
 
-### Driver: Update trip status
-`POST /trip/driver/update
-
 ### Driver: Update current location
 `POST /v1/driver/location`
 * **Request:** 
